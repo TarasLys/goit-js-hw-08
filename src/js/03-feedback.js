@@ -36,6 +36,7 @@ const formData = {
 
   formReg.reset();
     
+      
 }, 500));
 
 
