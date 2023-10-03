@@ -36,6 +36,7 @@ function refreshForm() {
         console.log(message);
     }
 }
+
 refreshForm();
 
 
