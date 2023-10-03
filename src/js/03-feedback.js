@@ -2,42 +2,41 @@ import throttle from 'lodash.throttle';
 
 const formReg = document.querySelector('.feedback-form')
 
+const STORAGE_KEY = "feedback-form-state";
 
-    const savedFeedbackFormState = localStorage.getItem("feedback-form-state");
+let formData = {};
 
-    if (savedFeedbackFormState) {
-        const { email, message } = JSON.parse(savedFeedbackFormState);
-        formReg.elements.email.value = email;
-        formReg.elements.message.value = message;
+function onInputHandler(event) { 
+    const inputValue = event.target.value.trim();
+    const inputName = event.target.name;
+    formData[inputName] = inputName;
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+}
+
+formReg.addEventListener("input", throttle(onInputHandler, 500));
+formReg.addEventListener("submit", (event) => {
+    event.preventDefault();
+   
+    console.log(formData);
+    formData = {};
+    localStorage.removeItem(STORAGE_KEY);
+    event.target.reset();
+});
+
+function refreshForm() { 
+    try {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (!savedData) return;
+        formData = JSON.parse(savedData);
+        Object.entries(formData).forEach(([key, val]) => {
+            formReg.elements[key].value = val;
+        });
+    } catch ({ message }) { 
+        console.log(message);
     }
-
-
-  formReg.addEventListener('submit', throttle((event) => {
-  event.preventDefault();
-
-  const emailInput = event.currentTarget.elements.email;
-  const messageInput = event.currentTarget.elements.message;
-
-    if (!emailInput.value || !messageInput.value) {
-    
-        alert("всі поля повинні бути заповнені!!!");
-        return;
-    }
-    
-const formData = {
-    email: emailInput.value,
-    message: messageInput.value
-};
-      
-      
-     localStorage.setItem("feedback-form-state", JSON.stringify(formData));
-
-  console.log(formData);
-
-  formReg.reset();
-    
-      
-}, 500));
+}
+refreshForm();
 
 
 
