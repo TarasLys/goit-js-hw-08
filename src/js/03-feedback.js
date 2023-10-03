@@ -9,7 +9,7 @@ let formData = {};
 function onInputHandler(event) { 
     const inputValue = event.target.value.trim();
     const inputName = event.target.name;
-    formData[inputName] = inputName;
+    formData[inputName] = inputValue;
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 }
